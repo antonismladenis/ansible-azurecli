@@ -1,0 +1,16 @@
+galaxy_info:
+  author: Antonis Mladenis
+  description: This role installs/uninstalls azure cli in Linux environment
+  namespace: ansible
+  license: Commercial
+  min_ansible_version: 2.1
+  platforms:
+   - name: Ubuntu
+     versions:
+     - 18.04
+     - 20.04
+   - name: RedHat
+     versions:
+     - 8.3
+  galaxy_tags: []
+dependencies: []

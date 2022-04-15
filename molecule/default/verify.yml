@@ -1,0 +1,70 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+
+  - name: Ubuntu Verify and then Remove
+    block:
+      - name: find azure-cli
+        stat:
+          path: /usr/share/doc/azure-cli
+        register: azurecli_exist
+      - name: Verify azure-cli Installation
+        assert:
+          that:
+            - azurecli_exist.stat.exists
+          success_msg: "azure-cli Installed Successfully"
+          fail_msg: "azure-cli Not Installed"
+      - name: Uninstall azure-cli
+        include_tasks:
+          file: ../../tasks/debian.yml
+          apply:
+            tags:
+              - uninstall_azure_cli
+              - debian
+        vars:
+          flag_install: false
+      - name: find azure-cli
+        stat:
+          path: /usr/share/doc/azure-cli
+        register: azurecli_exist
+      - name: Verify azure-cli Uninstallation on Debian
+        assert:
+          that:
+            - azurecli_exist.stat.exists == false
+          success_msg: "azure-cli Uninstalled Successfully"
+          fail_msg: "azure-cli is Installed"
+    when: ansible_facts.os_family == "Debian"
+
+  - name: Redhat/Centos Verify and then Remove
+    block:
+      - name: "Check if azure-cli is installed or not on Red Hat Linux family"
+        command: rpm -q azure-cli
+        register: azurecli_exist
+      - name: Verify azure-cli Installation
+        assert:
+          that:
+            - azurecli_exist is succeeded
+          success_msg: "azure-cli Installed Successfully"
+          fail_msg: "azure-cli Not Installed"
+      - name: Uninstall azure-cli
+        include_tasks:
+          file: ../../tasks/redhat.yml
+          apply:
+            tags:
+              - uninstall_azure_cli
+              - redhat
+        vars:
+          flag_install: false
+      - name: "Check if azure-cli is uninstalled on Red Hat Linux family"
+        yum:
+          list="azure-cli"
+        register: azurecli_exist
+      - name: Verify azure-cli Uninstallation
+        assert:
+          that:
+            - azurecli_exist.results[1].yumstate != 'installed'
+          success_msg: "azure-cli Uninstalled Successfully"
+          fail_msg: "azure-cli is present"
+    when: ansible_facts.os_family == "RedHat" or ansible_facts.os_family == "CentOS"

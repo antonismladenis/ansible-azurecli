@@ -1,0 +1,17 @@
+---
+# defaults file for azurecli
+
+azurecli_prereqs_debian:
+  - apt-transport-https
+  - curl
+  - ca-certificates
+  - lsb-release
+  - gnupg
+azurecli_repo_gpg_key_debian: https://packages.microsoft.com/keys/microsoft.asc
+azurecli_repo_debian: "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ {{ansible_distribution_release}} main"
+
+azurecli_repo_baseurl_redhat: https://packages.microsoft.com/yumrepos/azure-cli
+azurecli_gpg_key_redhat: https://packages.microsoft.com/keys/microsoft.asc
+azurecli_repo_gpgcheck_redhat: yes
+azurecli_repo_enabled_redhat: yes
+flag_install: true

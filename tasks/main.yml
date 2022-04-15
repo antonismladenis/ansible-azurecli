@@ -1,0 +1,10 @@
+---
+# tasks file for azurecli
+
+- name: Import debian.yml if OS family is Debian
+  import_tasks: debian.yml
+  when: ansible_os_family == "Debian"
+
+- name: Import redhat.yml if OS family is RedHat
+  import_tasks: redhat.yml
+  when: ansible_os_family == "RedHat"

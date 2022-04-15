@@ -1,0 +1,5 @@
+azurecli_repo_baseurl_redhat: https://packages.microsoft.com/yumrepos/azure-cli
+azurecli_gpg_key_redhat: https://packages.microsoft.com/keys/microsoft.asc
+azurecli_repo_gpgcheck_redhat: yes
+azurecli_repo_enabled_redhat: yes
+flag_install: true

@@ -1,0 +1,50 @@
+---
+# tasks file for debian
+
+- name: Install Azure-cli
+  tags:
+    - install_azure_cli
+    - debian
+  block:
+    - name: Update the APT repository
+      apt:
+        update_cache: yes
+
+    - name: Install prerequisite packages for the install process
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ azurecli_prereqs_debian }}"
+
+    - name: Import the APT repository key
+      apt_key:
+        url: "{{ azurecli_repo_gpg_key_debian }}"
+        state: present
+
+    - name: Create the APT repository
+      apt_repository:
+        repo: "{{ azurecli_repo_debian }}"
+        filename: azure-cli
+        state: present
+        update_cache: yes
+
+    - name: Install azure-cli package
+      apt:
+        name: azure-cli
+        state: present
+        update_cache: yes
+
+  when: flag_install | default(true) | bool
+
+- name: Uninstall Azure-cli
+  tags:
+    - uninstall_azure_cli
+    - debian
+  block:
+    - name: Unstall azure-cli package
+      apt:
+        name: azure-cli
+        state: absent
+        update_cache: yes
+        purge: yes
+  when: not flag_install | default(false) | bool

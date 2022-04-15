@@ -1,0 +1,37 @@
+---
+# tasks file for redhat
+
+- name: Install Azure-cli
+  tags:
+    - install_azure_cli
+    - redhat
+  block:
+    - name: Create the YUM repository
+      yum_repository:
+        name: azure-cli
+        description: Microsoft Azure CLI
+        baseurl: "{{ azurecli_repo_baseurl_redhat }}"
+        gpgkey: "{{ azurecli_gpg_key_redhat }}"
+        gpgcheck: "{{ azurecli_repo_gpgcheck_redhat }}"
+        enabled: "{{ azurecli_repo_enabled_redhat }}"
+        state: present
+    - name: Install azure-cli package
+      yum:
+        name: azure-cli
+        state: present
+        update_cache: yes
+      tags:
+        - molecule-idempotence-notest
+  when: flag_install | default(true) | bool
+
+- name: Uninstall Azure-cli
+  tags:
+    - uninstall_azure_cli
+    - redhat
+  block:
+    - name: Install azure-cli package
+      yum:
+        name: azure-cli
+        state: absent
+        update_cache: yes
+  when: flag_install | default(false) | bool

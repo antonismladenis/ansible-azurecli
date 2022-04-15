@@ -1,0 +1,33 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+
+platforms:
+  - name: Ubuntu
+    image: ubuntu:18.04
+    dockerfile: UbuntuDockerfile
+  - name: Centos
+    image: centos:8
+    dockerfile: CentosDockerfile
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+provisioner:
+  name: ansible
+  vars:
+    ansible_python_interpreter: python3
+verifier:
+  name: ansible
+scenario:
+  name: default
+  test_sequence:
+    - destroy
+    - syntax
+    - lint
+    - create
+    - converge
+    - idempotence
+    - verify
+    - destroy
